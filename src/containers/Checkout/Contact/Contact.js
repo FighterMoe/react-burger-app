@@ -16,6 +16,8 @@ import {connect} from 'react-redux';
 
 import * as actionTypes from '../../../store/actions/index';
 
+import {updateObject, checkValidity} from '../../../share/utility';
+
 class Contact extends Component {
 	state = {
 		orderForms: {
@@ -30,6 +32,7 @@ class Contact extends Component {
 					required: true,
 				},
 				valid: false,
+				touched: false,
 			},
 			email: {
 				elementType : "input",
@@ -43,6 +46,7 @@ class Contact extends Component {
 					isEmail: true,
 				},
 				valid: false,
+				touched: false,
 			},
 			country: {
 				elementType : "input",
@@ -55,6 +59,7 @@ class Contact extends Component {
 					required: true,
 				},
 				valid: false,
+				touched: false,
 			},
 			street: {
 				elementType : "input",
@@ -67,6 +72,7 @@ class Contact extends Component {
 					required: true,
 				},
 				valid: false,
+				touched: false,
 			},
 			zipCode: {
 				elementType : "input",
@@ -78,10 +84,11 @@ class Contact extends Component {
 				validation : {
 					required: true,
 					isNumeric : true,
-					minLength: 5,
-					maxLength: 5,
+					minLength: 6,
+					maxLength: 6,
 				},
 				valid: false,
+				touched: false,
 			},
 			deliveryMethods: {
 				elementType : "select",
@@ -97,52 +104,21 @@ class Contact extends Component {
 			},
 		},
 		isValidForms: false,
-	}
-
-	inputValidity = (rules, value) => {
-
-		if (!rules) {
-			return;
-		}
-
-		let isValid = true;
-
-		if (rules.required) {
-			isValid = value.trim() !== "" && isValid;
-		}
-
-		if (rules.minLength) {
-			isValid = value.length >= rules.minLength && isValid;
-		}
-
-		if (rules.maxLength) {
-			isValid = value.length <= rules.maxLength && isValid;
-		}
-
-		if (rules.isNumeric) {
-			const pattern = /^\d+$/;
-			isValid = pattern.test(value);
-		}
-
-		if (rules.isEmail) {
-			const pattern = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
-			isValid = pattern.test(value);
-		}
-
-		return isValid;
+		touched: false
 	}
 
 	valueChangeHandler = (event, inputId) => {
-		const updatedForms = { ...this.state.orderForms };
 		
-		const updatedChildElement = { ...updatedForms[inputId] };
-
-		updatedChildElement.value = event.target.value;
-
-		updatedChildElement.valid = this.inputValidity(updatedChildElement.validation, 
-									updatedChildElement.value);
-
-		updatedForms[inputId] = updatedChildElement;
+		const updatedChildElement = updateObject(this.state.orderForms[inputId],{
+			value: event.target.value,
+			valid: checkValidity(this.state.orderForms[inputId].validation, 
+									event.target.value),
+			touched: true	
+		});	
+		
+		const updatedForms = updateObject(this.state.orderForms,{
+			[inputId] : updatedChildElement
+		});
 
 		let isValidForms = true;
 
@@ -194,7 +170,8 @@ class Contact extends Component {
 							elementConfig = {formId.config.elementConfig} 
 							value = {formId.config.value} 
 							changed = { (event) => this.valueChangeHandler(event, formId.id)}
-							invalid = {!formId.config.valid}  />
+							invalid = {!formId.config.valid}  
+							isTouched = {formId.config.touched} />
 					})
 				}
 
@@ -209,7 +186,6 @@ class Contact extends Component {
 		return (
 				<div className={classes.Contact}>
 					<h2>Enter Your Contact Data!</h2>
-
 					{form}
 				</div>
 			)

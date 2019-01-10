@@ -3,9 +3,3 @@
 	margin:20px auto;
 	text-align:center;
 }
-
-@media (max-width: 600px ){
-	.CheckoutSummary {
-		width: 500px;
-	}
-}

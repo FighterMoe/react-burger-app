@@ -1,5 +1,5 @@
 import * as reduxAction from '../actions/actionTypes';
-import {updateObject} from '../utility';
+import {updateObject} from '../../share/utility';
 
 const INGREDIENTS_PRICES = {
 	'salad' : 0.5,

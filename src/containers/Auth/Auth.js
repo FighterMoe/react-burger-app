@@ -10,6 +10,8 @@ import Spinner from '../../components/UI/Spinner/Spinner';
 
 import * as actionTypes from '../../store/actions/index';
 
+import {updateObject, checkValidity} from '../../share/utility';
+
 class auth extends Component {
     state={
         controls: {
@@ -24,7 +26,8 @@ class auth extends Component {
                     required: true,
                     isEmail: true
 				},
-				valid: false,
+                valid: false,
+                touched: false
             },
             password: {
                 elementType: input,
@@ -38,7 +41,8 @@ class auth extends Component {
                     minLength: 6,
 					maxLength: 6,
 				},
-				valid: false,
+                valid: false,
+                touched:false
             }
         },
         isSingup: true,
@@ -65,41 +69,17 @@ class auth extends Component {
            );
     }
 
-    checkValidity = (rules, value) => {
-        if(!rules.required) { return };
-
-        let isValid = true;
-        
-        if(rules.required) {
-            isValid = value.trim() !== "" && isValid;
-        }
-
-        if(rules.minLength) {
-            isValid = value.length >= rules.minLength && isValid;
-        }
-
-        if(rules.maxLength) {
-            isValid = value.length <= rules.maxLength && isValid;
-        }
-
-        if (rules.isEmail) {
-			const pattern = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
-			isValid = pattern.test(value);
-        }
-        
-        return isValid;
-
-    }
 
     onInputChangeHandler = (event, inputId) => {
-        const newControls = {...this.state.controls};
-        
-        const targetInput = {...newControls[inputId]};
-        targetInput.value = event.target.value;
+        const targetInput = updateObject(this.state.controls[inputId], {
+            value: event.target.value,
+            valid: checkValidity(this.state.controls[inputId].validation, event.target.value),
+            touched: true
+        })
 
-        targetInput.valid = this.checkValidity(targetInput.validation, targetInput.value);
-
-        newControls[inputId] = targetInput;
+        const newControls = updateObject(this.state.controls, {
+            [inputId] : targetInput
+        });
 
         this.setState({controls: newControls});
     }
@@ -122,7 +102,8 @@ class auth extends Component {
                 elementConfig={key.config.elementConfig}
                 value={key.config.value}
                 changed={ (event) => this.onInputChangeHandler(event, key.id)}
-                invalid={!key.config.valid} />
+                invalid={!key.config.valid} 
+                isTouched={key.config.touched}/>
         ));
         
         if(this.props.loading) {
