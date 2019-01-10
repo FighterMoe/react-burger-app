@@ -27,7 +27,6 @@ class auth extends Component {
                     isEmail: true
 				},
                 valid: false,
-                touched: false
             },
             password: {
                 elementType: input,
@@ -42,7 +41,6 @@ class auth extends Component {
 					maxLength: 6,
 				},
                 valid: false,
-                touched:false
             }
         },
         isSingup: true,
@@ -103,7 +101,7 @@ class auth extends Component {
                 value={key.config.value}
                 changed={ (event) => this.onInputChangeHandler(event, key.id)}
                 invalid={!key.config.valid} 
-                isTouched={key.config.touched}/>
+            />
         ));
         
         if(this.props.loading) {

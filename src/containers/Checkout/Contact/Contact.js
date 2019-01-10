@@ -32,7 +32,6 @@ class Contact extends Component {
 					required: true,
 				},
 				valid: false,
-				touched: false,
 			},
 			email: {
 				elementType : "input",
@@ -46,7 +45,6 @@ class Contact extends Component {
 					isEmail: true,
 				},
 				valid: false,
-				touched: false,
 			},
 			country: {
 				elementType : "input",
@@ -59,7 +57,6 @@ class Contact extends Component {
 					required: true,
 				},
 				valid: false,
-				touched: false,
 			},
 			street: {
 				elementType : "input",
@@ -72,7 +69,6 @@ class Contact extends Component {
 					required: true,
 				},
 				valid: false,
-				touched: false,
 			},
 			zipCode: {
 				elementType : "input",
@@ -88,7 +84,6 @@ class Contact extends Component {
 					maxLength: 6,
 				},
 				valid: false,
-				touched: false,
 			},
 			deliveryMethods: {
 				elementType : "select",
@@ -104,7 +99,6 @@ class Contact extends Component {
 			},
 		},
 		isValidForms: false,
-		touched: false
 	}
 
 	valueChangeHandler = (event, inputId) => {
@@ -113,7 +107,6 @@ class Contact extends Component {
 			value: event.target.value,
 			valid: checkValidity(this.state.orderForms[inputId].validation, 
 									event.target.value),
-			touched: true	
 		});	
 		
 		const updatedForms = updateObject(this.state.orderForms,{
