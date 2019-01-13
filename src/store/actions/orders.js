@@ -2,11 +2,11 @@ import * as actionTypes from './actionTypes';
 import axios from '../../axios-order';
 import { fetachIngredientsFail } from './burgerBuilder';
 
-export const purchaseBurgerSuccess = (id, ingredients) => {
+export const purchaseBurgerSuccess = (id, orders) => {
     return {
         type: actionTypes.PURCHASE_BURGER_SUCCESS,
         id: id,
-        ingredients: ingredients  
+        orders: orders  
     }
 }
 
@@ -34,6 +34,8 @@ export const purchaseBurger = (orderData, idToken) => {
         dispatch(purchaseBurgerStart());
         axios.post('/orders.json?auth=' + idToken, orderData)
         .then(response => {
+            console.log(response.data.name);
+            console.log(orderData)
             dispatch(purchaseBurgerSuccess(response.data.name, orderData));
         })
         .catch( error => {
